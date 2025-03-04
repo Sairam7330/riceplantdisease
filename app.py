@@ -6,13 +6,18 @@ import gdown
 
 # Google Drive file ID
 file_id = "1SaDGf-5F74No2MvgJL83P-1POoBFJp1n"
-output_path = "/mnt/data/rice_plant_disease_model.h5"
+import os
+
+# Define a local path instead of `/mnt/data/`
+output_path = "rice_plant_disease_model.h5"
 
 @st.cache_resource()
 def download_and_load_model():
-    gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
+    if not os.path.exists(output_path):  # Avoid re-downloading if the file exists
+        gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
     model = tf.keras.models.load_model(output_path)
     return model
+
 
 model = download_and_load_model()
 
